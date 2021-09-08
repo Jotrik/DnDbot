@@ -17,6 +17,7 @@ func main() {
 	var pas tgbotapi.Update
 	var user User
 	var db *sql.DB
+	var authoriz bool
 
 	db = Db_connect()
 	defer db.Close()
@@ -85,10 +86,32 @@ func main() {
 				tuser, temp = Authentication(db, user)
 				if temp == true {
 					bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Автроизация прошла успешно"))
+					authoriz = true
 				} else {
 					bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Неверный логин или пароль"))
+					authoriz = false
 				}
 				fmt.Println(tuser)
+
+			case "/game":
+				if authoriz == true{
+
+					bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Вас атакуют!!!\n Варианты:\n 1) Защищаться\n 2) Атаковать\n 3) Убегать"))
+					switch update.Message.Text {
+					case "1":
+						bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Вы защитились"))
+					case "2":
+						bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Вы атаковали"))
+					case "3":
+						bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Вы сЪебалисЬ"))
+
+
+
+					}
+				} else {
+					bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Необходима авторизация"))
+				}
+
 
 			}
 
